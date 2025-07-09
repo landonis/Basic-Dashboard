@@ -8,8 +8,8 @@ sudo apt install -y nodejs npm sqlite3 nginx
 echo "[INFO] Setting up backend..."
 cd $(dirname "$0")/../backend
 npm install
-npx tsc
-
+npm run build
+cd -
 echo "[INFO] Setting up database..."
 node dist/init.js
 
