@@ -4,6 +4,29 @@ set -e
 echo "[INFO] Installing dependencies..."
 sudo apt update
 sudo apt install -y nodejs npm sqlite3 nginx openssl
+echo "[INFO] Ensuring www-data user exists and has access to /opt/Basic-Dashboard..."
+
+# Make sure www-data exists
+if ! id "www-data" &>/dev/null; then
+  echo "[INFO] Creating www-data user..."
+  sudo useradd -r -s /usr/sbin/nologin www-data
+else
+  echo "[INFO] www-data user already exists."
+fi
+
+# Set ownership and permissions
+sudo chown -R root:root /opt/Basic-Dashboard
+sudo chmod o+rx /opt
+sudo chmod o+rx /opt/Basic-Dashboard
+
+# Make sure the backend directory is traversable
+sudo chmod o+rx /opt/Basic-Dashboard/backend
+
+# Ensure data folder is writable by www-data
+sudo mkdir -p /opt/Basic-Dashboard/data
+sudo chown -R www-data:www-data /opt/Basic-Dashboard/data
+sudo chmod -R 770 /opt/Basic-Dashboard/data
+
 
 echo "[INFO] Ensuring backend dependencies and build..."
 cd /opt/Basic-Dashboard/backend
