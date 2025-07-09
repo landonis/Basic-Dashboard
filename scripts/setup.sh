@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+
 echo "[INFO] Installing dependencies..."
 sudo apt update
 sudo apt install -y nodejs npm sqlite3 nginx openssl
