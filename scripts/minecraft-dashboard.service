@@ -1,0 +1,13 @@
+[Unit]
+Description=Minecraft Dashboard Web App
+After=network.target
+
+[Service]
+User=www-data
+WorkingDirectory=/home/ubuntu/management-dashboard/backend
+ExecStart=/usr/bin/node dist/index.js
+Restart=always
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
