@@ -65,4 +65,9 @@ if [ ! -f "$NGINX_CONF" ]; then
   echo "[INFO] Configuring Nginx..."
   sudo cp scripts/minecraft-dashboard-ssl.nginx "$NGINX_CONF"
   sudo ln -sf "$NGINX_CONF" /etc/nginx/sites-enabled/minecraft-dashboard
-  sudo nginx
+  sudo nginx -t && sudo systemctl reload nginx
+else
+  echo "[INFO] Nginx config already present."
+fi
+
+echo "[✅] Setup complete. Visit https://<your-server-ip>/ to access the dashboard."
