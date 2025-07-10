@@ -28,7 +28,6 @@ sudo chmod -R 770 /opt/Basic-Dashboard/data
 # ===========================
 # BACKEND SETUP
 # ===========================
-
 echo "[INFO] Ensuring backend dependencies and build..."
 cd /opt/Basic-Dashboard/backend
 
@@ -39,18 +38,18 @@ else
   echo "[INFO] Backend dependencies already installed."
 fi
 
-if [ ! -f "dist/init.js" ]; then
-  echo "[INFO] Compiling TypeScript backend..."
-  npm run build
-else
-  echo "[INFO] Backend already compiled."
+npm run build
+
+if [ ! -f "dist/index.js" ]; then
+  echo "[ERROR] Backend build failed — dist/index.js not found"
+  exit 1
 fi
 
 echo "[INFO] Checking and initializing SQLite database..."
 DB_FILE="/opt/Basic-Dashboard/data/database.db"
 if [ ! -f "$DB_FILE" ]; then
   echo "[INFO] Running database init script..."
-  sudo -u www-data NODE_ENV=production node /opt/Basic-Dashboard/backend/dist/init.js
+  sudo -u www-data NODE_ENV=production node dist/init.js
 else
   echo "[INFO] Database already exists at $DB_FILE"
 fi
@@ -60,12 +59,8 @@ cd -
 # ===========================
 # FRONTEND SETUP
 # ===========================
-
 echo "[INFO] Building frontend..."
-
-FRONTEND_DIR="/opt/Basic-Dashboard/frontend"
-
-cd "$FRONTEND_DIR"
+cd /opt/Basic-Dashboard/frontend
 
 if [ ! -d "node_modules" ] || [ ! -f "package-lock.json" ]; then
   echo "[INFO] Installing frontend dependencies..."
@@ -74,11 +69,11 @@ else
   echo "[INFO] Frontend dependencies already installed."
 fi
 
+npm run build
+
 if [ ! -f "dist/index.html" ]; then
-  echo "[INFO] Building frontend using Vite..."
-  npm run build
-else
-  echo "[INFO] Frontend already built."
+  echo "[ERROR] Frontend build failed — dist/index.html missing"
+  exit 1
 fi
 
 cd -
@@ -86,7 +81,6 @@ cd -
 # ===========================
 # SSL CERTIFICATE
 # ===========================
-
 SSL_CERT="/etc/ssl/minecraft-dashboard/selfsigned.crt"
 SSL_KEY="/etc/ssl/minecraft-dashboard/selfsigned.key"
 if [ ! -f "$SSL_CERT" ] || [ ! -f "$SSL_KEY" ]; then
@@ -99,7 +93,6 @@ fi
 # ===========================
 # SYSTEMD SERVICE
 # ===========================
-
 SERVICE_FILE="/etc/systemd/system/minecraft-dashboard.service"
 if [ ! -f "$SERVICE_FILE" ]; then
   echo "[INFO] Configuring systemd service..."
@@ -115,7 +108,6 @@ sudo systemctl restart minecraft-dashboard
 # ===========================
 # NGINX SETUP
 # ===========================
-
 NGINX_CONF="/etc/nginx/sites-available/minecraft-dashboard"
 if [ ! -f "$NGINX_CONF" ]; then
   echo "[INFO] Configuring Nginx..."
