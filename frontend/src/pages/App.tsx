@@ -6,7 +6,7 @@ interface AppProps {
 
 export default function App({ onLogout }: AppProps) {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
+    <div className="min-h-screen bg-gray-100 text-gray-900 font-sans">
       <nav className="bg-white border-b shadow-sm px-6 py-4 flex justify-between items-center">
         <span className="text-2xl font-bold text-blue-600">Minecraft Manager</span>
         <ul className="flex space-x-6 text-sm font-medium">
