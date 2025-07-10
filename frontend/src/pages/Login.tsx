@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 
-interface LoginProps {
-  onSuccess: () => void;
-}
-
-export default function Login({ onSuccess }: LoginProps) {
+export default function Login({ onSuccess }: { onSuccess: () => void }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
@@ -15,36 +11,19 @@ export default function Login({ onSuccess }: LoginProps) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
-      credentials: 'include' // Required for session to persist
+      credentials: 'include'
     });
-    if (res.ok) {
-      onSuccess();
-    } else {
-      setError(true);
-    }
+    if (res.ok) onSuccess();
+    else setError(true);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-sm mx-auto bg-white p-6 rounded shadow mt-20">
-      <h2 className="text-xl font-semibold mb-4">Login</h2>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={e => setUsername(e.target.value)}
-        className="block w-full mb-3 border rounded p-2"
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        className="block w-full mb-3 border rounded p-2"
-      />
-      {error && <p className="text-red-500 mb-2">Invalid login</p>}
-      <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded w-full">
-        Login
-      </button>
+    <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
+      <input value={username} onChange={e => setUsername(e.target.value)} placeholder="username" />
+      <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="password" />
+      <button type="submit">Login</button>
+      {error && <p>Invalid login</p>}
     </form>
   );
 }
