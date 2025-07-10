@@ -26,11 +26,6 @@ app.use(session({
 
 app.use(express.json());
 
-app.use(session({
-    secret: 'supersecret',
-    resave: false,
-    saveUninitialized: false
-}));
 
 app.use('/api', authRoutes);
 
