@@ -30,12 +30,21 @@ router.post('/logout', (req, res) => {
 
 router.post('/change-password', (req, res) => {
   const { currentPassword, newPassword } = req.body;
-  const user = authenticate(req.session.user?.username, currentPassword);
+
+  if (!req.session.user?.username) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+
+  const username = req.session.user.username;
+  const user = authenticate(username, currentPassword);
+
   if (!user) {
     return res.status(401).json({ error: 'Invalid current password' });
   }
+
   const stmt = db.prepare('UPDATE users SET password = ? WHERE username = ?');
-  stmt.run(newPassword, req.session.user.username);
+  stmt.run(newPassword, username);
+
   res.sendStatus(200);
 });
 
