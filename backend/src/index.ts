@@ -1,5 +1,7 @@
 import express from 'express';
 import session from 'express-session';
+
+
 import path from 'path';
 import { initDatabase } from './services/dbService';
 import authRoutes from './routes/auth';
@@ -9,6 +11,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 initDatabase();
+
+app.set('trust proxy', 1); // important if you're using HTTPS or Nginx
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'supersecret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: true,        // ✅ must be true when using HTTPS
+    sameSite: 'lax',     // helps cookies stick
+  }
+}));
 
 app.use(express.json());
 
