@@ -31,6 +31,7 @@ const Root = () => {
   return (
     <Router>
       <Routes>
+        {/* ✅ This is where your route goes */}
         <Route
           path="/"
           element={authenticated ? <App onLogout={handleLogout} /> : <Navigate to="/login" replace />}
