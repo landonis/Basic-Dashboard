@@ -22,7 +22,6 @@ router.get('/check', (req, res) => {
     router.post('/logout', (req, res) => {
   req.session.destroy(() => {
     res.sendStatus(200);
-  });
 });
 
 router.post('/change-password', (req, res) => {
