@@ -6,7 +6,6 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
-
 import App from './src/pages/App';
 import Login from './src/pages/Login';
 import Profile from './src/pages/Profile';
@@ -16,14 +15,14 @@ const Root = () => {
   const [authenticated, setAuthenticated] = React.useState<boolean | null>(null);
 
   React.useEffect(() => {
-    fetch('/api/check')
+    fetch('/api/check', { credentials: 'include' })
       .then(res => res.json())
       .then(data => setAuthenticated(data.authenticated))
       .catch(() => setAuthenticated(false));
   }, []);
 
   const handleLogout = async () => {
-    await fetch('/api/logout', { method: 'POST' });
+    await fetch('/api/logout', { method: 'POST', credentials: 'include' });
     setAuthenticated(false);
   };
 
@@ -34,33 +33,15 @@ const Root = () => {
       <Routes>
         <Route
           path="/"
-          element={
-            authenticated ? (
-              <App onLogout={handleLogout} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
+          element={authenticated ? <App onLogout={handleLogout} /> : <Navigate to="/login" replace />}
         />
         <Route
           path="/login"
-          element={
-            authenticated ? (
-              <Navigate to="/" replace />
-            ) : (
-              <Login onSuccess={() => setAuthenticated(true)} />
-            )
-          }
+          element={authenticated ? <Navigate to="/" replace /> : <Login onSuccess={() => setAuthenticated(true)} />}
         />
         <Route
           path="/profile"
-          element={
-            authenticated ? (
-              <Profile onLogout={handleLogout} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
+          element={authenticated ? <Profile onLogout={handleLogout} /> : <Navigate to="/login" replace />}
         />
       </Routes>
     </Router>
