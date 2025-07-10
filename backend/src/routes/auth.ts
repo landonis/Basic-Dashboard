@@ -18,6 +18,23 @@ router.get('/check', (req, res) => {
         return res.json({ authenticated: true });
     }
     res.status(401).json({ authenticated: false });
+
+    router.post('/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.sendStatus(200);
+  });
 });
+
+router.post('/change-password', (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const user = authenticate(req.session.user?.username, currentPassword);
+  if (!user) {
+    return res.status(401).json({ error: 'Invalid current password' });
+  }
+  const stmt = db.prepare('UPDATE users SET password = ? WHERE username = ?');
+  stmt.run(newPassword, req.session.user.username);
+  res.sendStatus(200);
+});
+
 
 export default router;
