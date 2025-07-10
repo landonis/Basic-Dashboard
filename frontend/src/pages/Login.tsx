@@ -15,7 +15,9 @@ export default function Login({ onSuccess }: LoginProps) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
+      credentials: 'include'  // ✅ REQUIRED to make sessions work
     });
+
     if (res.ok) {
       onSuccess();
     } else {
