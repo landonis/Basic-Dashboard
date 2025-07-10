@@ -1,8 +1,20 @@
 import Database from 'better-sqlite3';
-import path from 'path';
-import fs from 'fs';
+
 
 const dbPath = path.resolve(__dirname, '/opt/Basic-Dashboard/backend/src/data/database.db');
+
+const fs = require('fs');
+const path = require('path');
+
+// Ensure parent directory exists
+const dir = path.dirname(dbPath);
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir, { recursive: true });
+}
+
+export const db = new Database(dbPath);
+
+
 export const db = new Database(dbPath);
 
 export function initDatabase() {
